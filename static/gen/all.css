@@ -1,0 +1,45 @@
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/botosoftdev\/Dev\/PassportClassification\/static\/style2\.scss}line{font-family:\000031}}
+html {
+  height: 100%; }
+
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/botosoftdev\/Dev\/PassportClassification\/static\/style2\.scss}line{font-family:\000035}}
+  body {
+    background-color: #2590EB;
+    height: 100%; }
+
+    @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/botosoftdev\/Dev\/PassportClassification\/static\/style2\.scss}line{font-family:\0000311}}
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+      @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/botosoftdev\/Dev\/PassportClassification\/static\/style2\.scss}line{font-family:\0000320}}
+      .wrapper .file-upload {
+        height: 200px;
+        width: 200px;
+        border-radius: 100px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 4px solid #FFFFFF;
+        overflow: hidden;
+        background-image: linear-gradient(to bottom, #2590EB 50%, #FFFFFF 50%);
+        background-size: 100% 200%;
+        transition: all 1s;
+        color: #FFFFFF;
+        font-size: 100px; }
+        @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/botosoftdev\/Dev\/PassportClassification\/static\/style2\.scss}line{font-family:\0000339}}
+        .wrapper .file-upload input[type='file'] {
+          height: 200px;
+          width: 200px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+          cursor: pointer; }
+          @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/botosoftdev\/Dev\/PassportClassification\/static\/style2\.scss}line{font-family:\0000351}}
+          .wrapper .file-upload:hover {
+            background-position: 0 -100%;
+            color: #2590EB; }

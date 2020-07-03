@@ -1,7 +1,18 @@
 from flask import Flask, redirect, url_for, render_template, request
 import os
+from flask_assets import Environment, Bundle
 
 app = Flask(__name__)
+
+'''
+assets = Environment(app)
+assets.url = app.static_url_path
+assets.debug = True
+
+scss = Bundle('style2.scss', filters='pyscss', output='gen/all.css')
+assets.register('scss_all', scss)
+'''
+
 
 @app.route("/", methods=["POST", "GET"])
 def home():
@@ -17,8 +28,12 @@ def oneImagePredict():
 @app.route("/predictOneImage", methods=["POST", "GET"])
 def predictOneImage():
     if request.method == "POST":
-        img_url = request.form["img_url"]
+        img_url = request.files["image"]
+        apikey = request.form["apikey"]
+        print(img_url, apikey)
+        return ""
 
+        '''
         #Download Image
         with urllib.request.urlopen(img_url) as url:
             with open('test/temp.jpg', 'wb') as f:
@@ -67,7 +82,7 @@ def predictOneImage():
             return "STAPLED FACE"
         else:
             return "500"
-    
+        '''
     else:
         return "Use a POST request to access this API, check documentation at "
         

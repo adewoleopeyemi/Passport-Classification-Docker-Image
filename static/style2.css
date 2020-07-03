@@ -1,0 +1,175 @@
+body {
+  font-family: sans-serif;
+  background-image: linear-gradient(45deg, #7175da, #9790F2);
+  text-align: center;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  opacity: 1;
+  padding-left:10px;/* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: white;
+  padding-left:10px;  
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: white;
+  padding-left:10px;  
+}
+
+.file-upload {
+  background-color: #ffffff;
+  width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 100px;  
+  align-items: center;
+  justify-content: center  
+}
+
+
+.image-upload-wrap {
+  margin-top: 20px;
+  border: 4px dashed #2A265F;
+  border-color: #2A265F;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+}
+
+.choose {
+  position: absolute;
+  left: 5%;
+  width: 300px;
+  height: 50px;
+}
+
+.button{
+  position: absolute;
+  left: 7%;
+  width: 250px;
+  height: 50px;
+  border-radius: 8px;
+  background-color: #2A265F;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 120px;
+  margin-left: 120px;  
+  
+}
+
+
+.form {
+  line-height: 3;
+  height: 500px
+  display: inline-block;
+  text-align:center;
+  align-items: center;
+  justify-content: center  
+}
+
+.input {
+  position: absolute;
+  left: 5%;
+  background-color: #8a7fd6;
+  color: white;
+  width: 343px;
+  height: 40px;
+  border: 1.2px solid blue;
+  border-radius: 8px;
+  margin-left: 100px;
+  margin-top:40px;
+  padding-left:10px;
+}
+
+.heading {
+  position: absolute;
+  left: 5%;
+  font-family: Serif;
+  font-weight: bold;
+  font-size: 25px;
+  color: #2A265F;
+  margin-top: 20px;
+  margin-left: 100px;
+  margin-left: 100px;  
+  
+}
+
+.Neon {
+    font-family: sans-serif;
+    font-size: 14px;
+    color: #494949;
+    position: relative;
+    margin-top: 50px;
+    
+    
+
+}
+.Neon * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.Neon-input-dragDrop {
+    display: block;
+    width: 343px;
+    margin: 0 auto 25px auto;
+    padding: 25px;
+    color: #8d9499;
+    color: #97A1A8;
+    background: #fff;
+    border: 2px dashed #C8CBCE;
+    text-align: center;
+    -webkit-transition: box-shadow 0.3s, border-color 0.3s;
+    -moz-transition: box-shadow 0.3s, border-color 0.3s;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+.Neon-input-dragDrop .Neon-input-icon {
+    font-size: 48px;
+    margin-top: -10px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+.Neon-input-text h3 {
+    margin: 0;
+    font-size: 18px;
+}
+.Neon-input-text span {
+    font-size: 12px;
+}
+.Neon-input-choose-btn.blue {
+    color: #008BFF;
+    border: 1px solid #008BFF;
+}
+.Neon-input-choose-btn {
+    display: inline-block;
+    padding: 8px 14px;
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: bold;
+    color: #8d9496;
+    border-radius: 3px;
+    border: 1px solid #c6c6c6;
+    vertical-align: middle;
+    background-color: #fff;
+    box-shadow: 0px 1px 5px rgba(0,0,0,0.05);
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+
