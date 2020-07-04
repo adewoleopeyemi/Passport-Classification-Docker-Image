@@ -8,8 +8,26 @@
     
 </head>
 
-<body>
+ {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div id="flash-message-wrapper" class="text-center">
+                   <div class="alert alert-success alert-dismissible fade in" role="alert">
+                     <button type="button" class="close" data-dismiss="alert">
+                       <span aria-hidden="true">&times;</span>
+                       <span class="sr-only">Close</span>
+                     </button>
+                     {{ message }}
+                   </div>
+                </div>
+                {% endfor %}
+        {% endif %}
     
+        {% endwith %}
+    
+    
+<body>
+   
    <div class="file-upload">
         
       <div class="image-upload-wrap">
