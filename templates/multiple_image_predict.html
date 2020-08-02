@@ -1,0 +1,68 @@
+<html>
+    
+<head>
+    
+    
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='style3.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='oneImage.js') }}"></script>
+    
+</head>
+
+ {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div id="flash-message-wrapper" class="text-center">
+                   <div class="alert alert-success alert-dismissible fade in" role="alert">
+                     <button type="button" class="close" data-dismiss="alert">
+                       <span aria-hidden="true">&times;</span>
+                       <span class="sr-only">Close</span>
+                     </button>
+                     {{ message }}
+                   </div>
+                </div>
+                {% endfor %}
+        {% endif %}
+    
+        {% endwith %}
+    
+    
+<body>
+   
+   <div class="file-upload">
+        
+      <div class="image-upload-wrap">
+          <form class = "form" action="/predictMultipleImages" method="POST" enctype="multipart/form-data" >
+              <h class = "heading">PREDICT MULTIPLE IMAGES CLASS</h><br/>
+              <input class= "input" type="text" id="apikey" name="apikey" placeholder="API key" /><br/>
+              
+              
+              <div class="Neon Neon-theme-dragdropbox">
+                <input style="z-index: 999; opacity: 0; width: 320px; height: 200px; position: absolute; right: 0px; left: 0px; margin-right: auto; margin-left: auto;" name="image" id="filer_input2" type="file" accept="image/*" multiple="multiple">
+                    <div class="Neon-input-dragDrop">
+                        <div class="Neon-input-inner">
+                            <div class="Neon-input-icon">
+                                <i class="fa fa-file-image-o">
+                                </i>
+                            </div>
+                            <div class="Neon-input-text">
+                                <h3>Drag&amp;Drop files here</h3> 
+                                <span style="display:inline-block; margin: 15px 0">or</span></div>
+                            <a class="Neon-input-choose-btn blue">Browse Files</a>
+                        </div>
+                  </div>
+               </div>
+              
+               <input class = "button" type='submit' id = 'upload' value='Classify Passport'/>
+             
+          </form>    
+            
+    </div>    
+  </div>
+  
+</body>
+    
+</html>
+    
+    
+
+

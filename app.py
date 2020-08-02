@@ -13,6 +13,7 @@ from keras.preprocessing.image import ImageDataGenerator
 import urllib.request
 from keras.models import load_model
 import numpy as np
+import shutil
 
 import os
 
@@ -48,6 +49,11 @@ def home():
 @app.route("/oneImagePredict", methods=["GET"])
 def oneImagePredict():
     return render_template("one_image_predict.html")
+
+
+@app.route("/multipleImagePredict", methods=["GET"])
+def multipleImagePredict():
+    return render_template("multiple_image_predict.html")
 
 
 
@@ -143,6 +149,7 @@ def predictOneImage():
                 array  = np.array(predict)
                 ind = np.argmax(predict)
                 _class = ind
+                print(array,ind,_class)
 
                 #remove image from local directory
                 os.remove(path)
@@ -155,19 +162,19 @@ def predictOneImage():
                     flash("BLURRY")
                     return redirect(url_for("oneImagePredict"))
                 elif _class == 2:
-                    flash("FACE_IN_BACKGROUND")
+                    flash("FACE IN BACKGROUND")
                     return redirect(url_for("oneImagePredict"))
                 elif _class == 3:
-                    flash("GOOD_IMAGES")
+                    flash("GOOD IMAGE")
                     return redirect(url_for("oneImagePredict"))
                 elif _class == 4:
-                    flash("INVALID_PASSPORT")
+                    flash("INVALID PASSPORT")
                     return redirect(url_for("oneImagePredict"))
                 elif _class == 5:
-                    flash("NO_HUMAN_FACE")
+                    flash("NO HUMAN FACE")
                     return redirect(url_for("oneImagePredict"))
                 elif _class == 6:
-                    flash("STAPLED DEFACED")
+                    flash("STAPLE DEFACED")
                     return redirect(url_for("oneImagePredict"))
                 else:
                     return "500"
@@ -177,66 +184,272 @@ def predictOneImage():
         
         
 
-@app.route("/predictManyImages", methods=["POST", "GET"])
-def predictManyImages():
+@app.route("/predictMultipleImages", methods=["POST", "GET"])
+def predictMultipleImages():
     if request.method == "POST":
-        img_url_array = request.form["img_url"]
-        prediction_result = []
-        
-        #Image preprocessor
-        test_gen = ImageDataGenerator(rescale=1./255,
-                shear_range=0.2,
-                zoom_range=0.2,
-                horizontal_flip=True)
-        
-        #load model
-        loaded_model = load_model('model/model1-.h5')
-        
-        for img_url in img_url_array:
-            #Download Image
-            with urllib.request.urlopen(img_url) as url:
-                with open('test/temp.jpg', 'wb') as f:
-                    f.write(url.read())
+        uploaded_files = request.files.getlist("image")
+        apikey = request.form["apikey"]
+
+        if not uploaded_files or not any(f for f in uploaded_files):
+            flash('Please upload an image')
+            return redirect(url_for("multipleImagePredict"))
+        else:
+
+            config = {"apiKey": "AIzaSyC1ayNr3CCXRv-cejofLx1_hNmsR-o7Coo",
+                            "authDomain": "passport-image-classification.firebaseapp.com",
+                            "databaseURL": "https://passport-image-classification.firebaseio.com",
+                            "projectId": "passport-image-classification",
+                            "storageBucket": "passport-image-classification.appspot.com",
+                            "messagingSenderId": "39733434768",
+                            "appId": "1:39733434768:web:85ec9477120baa9116fb15",
+                            "measurementId": "G-FXCMDZNL6T"}
 
 
-            #preprocess image
-            test_generator = test_gen.flow_from_directory(
-                    "test/",
-                    target_size=(224, 224),
-                    shuffle = False,
-                    class_mode='categorical',
-                    batch_size=1)
+            UPLOAD_FOLDER = './test/test'
+            app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-            
+            #save image to local directory for upload to firebase storage
+            for file in uploaded_files:
+                path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                file.save(path)
 
-            #make prediciton
-            predict = loaded_model.predict_generator(test_generator) 
-            array  = np.array(predict)
-            ind = np.argmax(predict)
-            _class = ind+1
+                #save to firebase
+                today = datetime.now()
 
-            #remove image from server
-            os.remove('test/temp.jpg')
+                firebase = pyrebase.initialize_app(config)
+                storage = firebase.storage()
+                path_on_cloud = f'images/{today}.jpg'
+                storage.child(path_on_cloud).put(path)
 
-            #return class
-            if _class == 0:
-                prediction_result.append("BAD BACKGROUND")
-            elif _class == 1:
-                prediction_result.append("BLURRY")
-            elif _class == 2:
-                prediction_result.append("FACE_IN_BACKGROUND")
-            elif _class == 3:
-                prediction_result.append("GOOD_IMAGES")
-            elif _class == 4:
-                prediction_result.append("INVALID_PASSPORT")
-            elif _class == 5:
-                prediction_result.append("NO_HUMAN_FACE")
-            elif _class == 6:
-                prediction_result.append("STAPLED FACE")
+                upload_url = storage.child(path_on_cloud).get_url(token=None)
+
+
+            if not firebase_admin._apps:
+                #fetch credentials
+                cred = credentials.Certificate("service_account.json")
+                firebase_admin.initialize_app(cred, {'databaseURL': 'https://passport-image-classification.firebaseio.com/'})
+
+
+            ##validate API KEY
+            ref = db.reference('ApiKey')
+            apiKeyType = ref.child(apikey).child("type").get()
+
+            if apiKeyType == None:
+                flash('Invalid API Key')
+                return redirect(url_for("oneImagePredict"))
             else:
-                prediction_result.append("No Class")
+                #preprocess image
+                test_gen = ImageDataGenerator(rescale=1./255,
+                    shear_range=0.2,
+                    zoom_range=0.2,
+                    horizontal_flip=True)
 
-        return prediction_result
+                test_generator = test_gen.flow_from_directory(
+                        "test/",
+                        target_size=(224, 224),
+                        shuffle = False,
+                        class_mode='categorical',
+                        batch_size=1)
+
+                #load model
+                loaded_model = load_model('model/model1-94%.h5')
+
+                #make prediciton
+                predict = loaded_model.predict_generator(test_generator) 
+                array  = np.array(predict)
+                result = {}
+                for i, rows in enumerate(array):
+                    _class = np.argmax(rows)
+                    result[uploaded_files[i].filename] = _class
+
+
+                today = datetime.now()
+                current_directory = os.getcwd()
+                final_directory = os.path.join(current_directory, f'result_{today}')
+                if not os.path.exists(final_directory):
+                    os.makedirs(final_directory) 
+
+                error = 0
+                currentProgress = 0
+                resultDisplayed = {}
+
+                for key, value in result.items():
+                    if value == 0:
+                        #BAD BACKGROUND
+                        if os.path.exists(f"{final_directory}/BAD_BACKGROUND") == True:
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/BAD_BACKGROUND")
+                                resultDisplayed["BAD_BACKGROUND"] += 1
+                            except:
+                                error += 1
+                        else:
+                            #make directory
+                            os.mkdir(f"{final_directory}/BAD_BACKGROUND")
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/BAD_BACKGROUND")
+                                resultDisplayed["BAD_BACKGROUND"] = 1
+                            except Exception as e:
+                                error += 1
+                            currentProgress +=1
+
+                    elif value == 1:
+                        #BLURRY
+                        if os.path.exists(f"{final_directory}/BLURRY") == True:
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/BLURRY")
+                                resultDisplayed["BLURRY"] += 1
+                            except:
+                                error += 1
+                        else:
+                            #make directory
+                            os.mkdir(f"{final_directory}/BLURRY")
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/BLURRY")
+                                resultDisplayed["BLURRY"] = 1
+                            except Exception as e:
+                                error += 1
+                            currentProgress +=1
+
+                    elif value == 2:
+                        #FACE_IN_BACKGROUND
+                        if os.path.exists(f"{final_directory}/FACE_IN_BACKGROUND") == True:
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/FACE_IN_BACKGROUND")
+                                resultDisplayed["FACE_IN_BACKGROUND"] += 1
+                            except:
+                                error += 1
+                        else:
+                            #make directory
+                            os.mkdir(f"{final_directory}/FACE_IN_BACKGROUND")
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/FACE_IN_BACKGROUND")
+                                resultDisplayed["FACE_IN_BACKGROUND"] = 1
+                            except Exception as e:
+                                error += 1
+                            currentProgress +=1
+
+                    elif value == 3:
+                        #GOOD_IMAGES
+                        if os.path.exists(f"{final_directory}/GOOD_IMAGES") == True:
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/GOOD_IMAGES")
+                                resultDisplayed["GOOD_IMAGES"] += 1
+                            except:
+                                error += 1
+                        else:
+                            #make directory
+                            os.mkdir(f"{final_directory}/GOOD_IMAGES")
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/GOOD_IMAGES")
+                                resultDisplayed["GOOD_IMAGES"] = 1
+                            except Exception as e:
+                                error += 1
+                            currentProgress +=1
+
+
+                    elif value == 4:
+                        #INVALID_PASSPORT
+                        if os.path.exists(f"{final_directory}/INVALID_PASSPORT") == True:
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/INVALID_PASSPORT")
+                                resultDisplayed["INVALID_PASSPORT"] += 1
+                            except:
+                                error += 1
+                        else:
+                            #make directory
+                            os.mkdir(f"{final_directory}/INVALID_PASSPORT")
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/INVALID_PASSPORT")
+                                resultDisplayed["INVALID_PASSPORT"] = 1
+                            except Exception as e:
+                                error += 1
+                            currentProgress +=1
+
+
+
+                    elif value == 5:
+                        #NO_HUMAN_FACE
+                        if os.path.exists(f"{final_directory}/NO_HUMAN_FACE") == True:
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/NO_HUMAN_FACE")
+                                resultDisplayed["NO_HUMAN_FACE"] += 1
+                            except:
+                                error += 1
+                        else:
+                            #make directory
+                            os.mkdir(f"{final_directory}/NO_HUMAN_FACE")
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/NO_HUMAN_FACE")
+                                resultDisplayed["NO_HUMAN_FACE"] = 1
+                            except Exception as e:
+                                error += 1
+                            currentProgress +=1
+
+
+                    elif value == 6:
+                        #STAPLED_FACE
+                        if os.path.exists(f"{final_directory}/STAPLED_FACE") == True:
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/STAPLED_FACE")
+                                resultDisplayed["STAPLED_FACE"] += 1
+                            except:
+                                error += 1
+                        else:
+                            #make directory
+                            os.mkdir(f"{final_directory}/STAPLED_FACE")
+                            try:
+                                shutil.move(f"{UPLOAD_FOLDER}/{key}" , f"{final_directory}/STAPLED_FACE")
+                                resultDisplayed["STAPLED_FACE"] = 1
+                            except Exception as e:
+                                error += 1
+                            currentProgress +=1
+                                    
+                #make zip file
+                shutil.make_archive(f'result_{today}', 'zip', final_directory)
+
+                #upload to firebase
+                firebase = pyrebase.initialize_app(config)
+                storage = firebase.storage()
+                path_on_cloud = f'results/{today}.zip'
+                storage.child(path_on_cloud).put(f'{final_directory}.zip')
+
+                upload_url = storage.child(path_on_cloud).get_url(token=None)
+
+
+
+                resultDisplayed["downloadLink"] = upload_url
+
+                print(f'result directory {upload_url}')
+                print(result)
+
+
+
+                 #remove image from local directory
+                shutil.rmtree(final_directory)
+                os.remove(f'{final_directory}.zip') 
+
+                '''
+                for filename in os.listdir(final_directory):
+                    file_path = os.path.join(final_directory, filename)
+                    try:
+                        if os.path.isfile(file_path) or os.path.islink(file_path):
+                            os.unlink(file_path)
+                        elif os.path.isdir(file_path):
+                            shutil.rmtree(file_path)
+                    except Exception as e:
+                        print('Failed to delete %s. Reason: %s' % (file_path, e))
+                '''
+
+                return render_template("multipleImagesPopUp.html", data=resultDisplayed)
+
+               
+                
+                
+               
+
+
+        
+        
     
     else:
         return "Use a POST request to access this API, check documentation at "
