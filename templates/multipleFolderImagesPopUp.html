@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Popup Login Form Design | CodingNepal</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='stylePopUp2.css') }}">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  </head>
+  <body> 
+    <div class="center">
+     
+      <label for="show" class="show-btn">View Form</label>
+      <div class="container">
+       
+
+      
+      <form action="/predictImagesInFolder" method="GET" enctype="multipart/form-data">
+        
+        <input type='image' for="show" class="close-btn fas fa-times" title="close" src="https://firebasestorage.googleapis.com/v0/b/passport-image-classification.appspot.com/o/website_elements%2Fclose.png?alt=media&token=b67c827c-b4ff-41e6-a219-3f28e1ab3a97" height="20px" width="20px" />
+
+
+      </form>
+
+
+
+        <div class="text"> RESULT </div>
+
+        {% for key, values in data.items() %}
+            {% if key == "GOOD_IMAGES" %}
+              <div class="result"> ✅  {{key}}  : {{values}}</div>
+            {% elif key != "downloadLink" %}
+              <div class="result"> 🛑  {{key}}  : {{values}}</div>
+            {% endif %}
+
+          
+
+            
+        {% endfor %}
+
+
+
+
+      <div class="btn">
+            <div class="inner">
+            </div>
+            <a href={{data["downloadLink"]}} download=> 
+              <button type="submit">Download Result</button>
+            </a>      
+      </div>
+       
+
+
+      <!--      
+      <form action="#" class="frm"  <a href={{data["downloadLink"]}} download> </a> >
+        <div class="btn">
+            <div class="inner">
+            </div>
+            <a href={{data["downloadLink"]}} download> 
+              <button type="submit">Download Result</button>
+            </a>
+
+
+            
+          </div>
+      </form>
+      -->
+    
+
+      </div>
+    </div>
+  </body>
+</html>
