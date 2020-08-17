@@ -89,7 +89,7 @@ def predictOneImage():
             if not firebase_admin._apps:
                 #fetch credentials
                 cred = credentials.Certificate("service_account.json")
-                firebase_admin.initialize_app(cred, {'databaseURL': 'https://passport-image-classification.firebaseio.com/'})
+                firebase_admin.initialize_app(cred, {'databaseURL': 'https://xxxxx.firebaseio.com/'})
 
 
             ##validate API KEY
@@ -103,14 +103,14 @@ def predictOneImage():
 
                 #image_url = sys.argv[1] #we pass the url as an argument
 
-                config = {"apiKey": "AIzaSyC1ayNr3CCXRv-cejofLx1_hNmsR-o7Coo",
-                            "authDomain": "passport-image-classification.firebaseapp.com",
-                            "databaseURL": "https://passport-image-classification.firebaseio.com",
-                            "projectId": "passport-image-classification",
-                            "storageBucket": "passport-image-classification.appspot.com",
-                            "messagingSenderId": "39733434768",
-                            "appId": "1:39733434768:web:85ec9477120baa9116fb15",
-                            "measurementId": "G-FXCMDZNL6T"}
+                config = {"apiKey": "xxxxx",
+                            "authDomain": "xxxxx.firebaseapp.com",
+                            "databaseURL": "https://xxxxx.firebaseio.com",
+                            "projectId": "xxxxx",
+                            "storageBucket": "xxxxx.appspot.com",
+                            "messagingSenderId": "xxxxx",
+                            "appId": "1:xxxxx:web:xxxxx",
+                            "measurementId": "xxxxx"}
 
                 today = datetime.now()
 
@@ -189,8 +189,8 @@ def predictOneImage():
         
         
 
-@app.route("/predictMultipleImages", methods=["POST", "GET"])
-def predictMultipleImages():
+@app.route("/xxxxx", methods=["POST", "GET"])
+def xxxxx():
     if request.method == "POST":
         uploaded_files = request.files.getlist("image")
         apikey = request.form["apikey"]
@@ -200,14 +200,14 @@ def predictMultipleImages():
             return redirect(url_for("multipleImagePredict"))
         else:
 
-            config = {"apiKey": "AIzaSyC1ayNr3CCXRv-cejofLx1_hNmsR-o7Coo",
-                            "authDomain": "passport-image-classification.firebaseapp.com",
-                            "databaseURL": "https://passport-image-classification.firebaseio.com",
-                            "projectId": "passport-image-classification",
-                            "storageBucket": "passport-image-classification.appspot.com",
-                            "messagingSenderId": "39733434768",
-                            "appId": "1:39733434768:web:85ec9477120baa9116fb15",
-                            "measurementId": "G-FXCMDZNL6T"}
+            config = {"apiKey": "xxxxx",
+                            "authDomain": "xxxxx.firebaseapp.com",
+                            "databaseURL": "https://xxxxx.firebaseio.com",
+                            "projectId": "xxxxx",
+                            "storageBucket": "xxxxx.appspot.com",
+                            "messagingSenderId": "xxxxx",
+                            "appId": "1:xxxxx:web:xxxxx",
+                            "measurementId": "xxxxx"}
 
 
             UPLOAD_FOLDER = './test/test'
@@ -234,7 +234,7 @@ def predictMultipleImages():
             if not firebase_admin._apps:
                 #fetch credentials
                 cred = credentials.Certificate("service_account.json")
-                firebase_admin.initialize_app(cred, {'databaseURL': 'https://passport-image-classification.firebaseio.com/'})
+                firebase_admin.initialize_app(cred, {'databaseURL': 'https://xxxxx.firebaseio.com/'})
 
 
             ##validate API KEY
@@ -466,14 +466,14 @@ def predictImagesInFolder():
             return redirect(url_for("multipleImagePredict"))
         else:
 
-            config = {"apiKey": "AIzaSyC1ayNr3CCXRv-cejofLx1_hNmsR-o7Coo",
-                            "authDomain": "passport-image-classification.firebaseapp.com",
-                            "databaseURL": "https://passport-image-classification.firebaseio.com",
-                            "projectId": "passport-image-classification",
-                            "storageBucket": "passport-image-classification.appspot.com",
-                            "messagingSenderId": "39733434768",
-                            "appId": "1:39733434768:web:85ec9477120baa9116fb15",
-                            "measurementId": "G-FXCMDZNL6T"}
+            config = {"apiKey":xxxxx",
+                            "authDomain": "xxxxx.firebaseapp.com",
+                            "databaseURL": "xxxxx.firebaseio.com",
+                            "projectId": "xxxxx",
+                            "storageBucket": "xxxxx.appspot.com",
+                            "messagingSenderId": "xxxxx",
+                            "appId": "1:xxxxx:web:xxxxx",
+                            "measurementId": "xxxxx"}
 
 
             
@@ -487,7 +487,7 @@ def predictImagesInFolder():
             if not firebase_admin._apps:
                 #fetch credentials
                 cred = credentials.Certificate("service_account.json")
-                firebase_admin.initialize_app(cred, {'databaseURL': 'https://passport-image-classification.firebaseio.com/'})
+                firebase_admin.initialize_app(cred, {'databaseURL': 'https://xxxxx.firebaseio.com/'})
 
 
             ##validate API KEY
@@ -697,13 +697,13 @@ def predictImagesInFolder():
 
 def saveFolder(uploaded_files):
     cwd = os.getcwd()
-    config = {"apiKey": "AIzaSyC1ayNr3CCXRv-cejofLx1_hNmsR-o7Coo",
-                "authDomain": "passport-image-classification.firebaseapp.com",
-                "databaseURL": "https://passport-image-classification.firebaseio.com",
-                "projectId": "passport-image-classification",
-                "storageBucket": "passport-image-classification.appspot.com",
-                "messagingSenderId": "39733434768",
-                "appId": "1:39733434768:web:85ec9477120baa9116fb15",
+    config = {"apiKey": "xxxxx",
+                "authDomain": "xxxxx.firebaseapp.com",
+                "databaseURL": "https://xxxxx.firebaseio.com",
+                "projectId": "xxxxx",
+                "storageBucket": "xxxxx.appspot.com",
+                "messagingSenderId": "xxxxx",
+                "appId": "1:xxxxx:web:xxxxx",
                 "measurementId": "G-FXCMDZNL6T"}
 
 
